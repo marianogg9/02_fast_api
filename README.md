@@ -36,3 +36,8 @@ In order to test, that the API is responding accordingly.
 You can use pytest. At least one test is expected for each request.
 
 [Bonus] Create a collection of requests in Postman.
+
+## References
+
+[Video - Creator of FastAPI speaks about FastAPI](https://www.youtube.com/watch?v=37CcB2GBdlY)
+[Video - Full course](https://www.youtube.com/watch?v=7t2alSnE2-I)
