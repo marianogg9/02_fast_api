@@ -95,7 +95,7 @@ def add():
             message = 'Added: ' + name + '. A tip: resend the request to list the added entry.'
             listing.append(message)
         else:                                                           # if anime exists, skip and show its row
-            for i in conn.execute(select_stmt):                         # same behaviour as line 60
+            for i in conn.execute(select_stmt):
                 print("Already exists, skipping..")
                 listing.append(str(i))
         
