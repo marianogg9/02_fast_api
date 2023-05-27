@@ -8,13 +8,13 @@ The goal of this project is to create an API providing information about japanes
 The API should be able to return responses for the following queries.
 The data will be stored in a sqlite db.
 
-0 - Import data via SQLAlchemy models into a sqlite db [  ]
+0 - Import data via SQLAlchemy models into a sqlite db [X]
 
-1 - List the first 100 animees sorted by [  ]
+1 - List the first 100 animees sorted by [X]
 
-2 - Get all details about "Death Note" [  ]
+2 - Get all details about "Death Note" [X]
 
-3 - Add an animee not existing in the database [  ]
+3 - Add an animee not existing in the database [X]
 
 4 - Update partially an animee [  ]
 

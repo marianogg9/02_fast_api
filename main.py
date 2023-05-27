@@ -1,6 +1,6 @@
 import csv
-from flask import Flask
-from sqlalchemy import create_engine, select, Table, Column, Integer, MetaData, String
+from flask import Flask,request
+from sqlalchemy import create_engine, select, insert, Table, Column, Integer, MetaData, String
 
 engine = create_engine("sqlite+pysqlite:///local.db", echo=True)        # create a file based DB
 metadata = MetaData()
@@ -36,39 +36,60 @@ def base():
 
 @app.route("/all")
 def all():
-    listado = []
+    listing = []
 
     with engine.connect() as conn:                                      # show an ordered set of rows
         stmt = select(animes).limit(100).order_by(animes.c.Anime_ID)
         for i in conn.execute(stmt):
             # print(i)
-            listado.append(str(i))                                      # this has to be JSON serialisable, so sqlalchemy result object (of type = row) won't work for Flask, hence a list
+            listing.append(str(i))                                      # this has to be JSON serialisable, so sqlalchemy result object (of type = row) won't work for Flask, hence a list
         
-        return listado                                                  
+        return listing                                                  
 
-@app.route("/animes/<string:name>")
+@app.route("/anime/<string:name>")
 def querying_animes(name):
-    listado = []
+    listing = []
 
     with engine.connect() as conn:                                  
         stmt = select(animes).limit(100).order_by(animes.c.Anime_ID).where(animes.c.Name==name)
-        for i in conn.execute(stmt):
-            # print(i)
-            listado.append(str(i))
+        result = conn.execute(stmt)
+        if result.first() is None:
+            messagge = 'Anime: "' + name + '" not found'
+            listing.append(messagge)
+        else:
+            for i in conn.execute(stmt):                                # kinda weird, not sure why I cannot use 'result' again (it throws as 'qlalchemy.exc.ResourceClosedError: This result object is closed' error)
+                listing.append(str(i))
         
-        return listado                                                  
+        return listing                                                  
 
-@app.route("/anime/add/<string:name>")
-def querying(name):
-    listado = []
+@app.route("/anime/add/") # localhost:5000/anime/add?anime_id=9&name=What a beautiful day&type=TV&genre=Action&episodes=123
+def add():
+    listing = []
 
     with engine.connect() as conn:                                      
-        stmt = select(animes).limit(100).order_by(animes.c.Anime_ID).where(animes.c.Name==name)
-        for i in conn.execute(stmt):
-            # print(i)
-            listado.append(str(i))
+        anime_id = request.args.get('anime_id')
+        name = request.args.get('name')
+        genre = request.args.get('genre')
+        type = request.args.get('type')
+        episodes = request.args.get('episodes')
+        rating = request.args.get('rating')
+        members = request.args.get('members')
+
+        select_stmt = select(animes).where(animes.c.Name==name)
+        result = conn.execute(select_stmt)
+        if result.first() is None:                                      # only add a new row if it doesn't exist in the DB
+            print('Could not find it, adding..')
+            insert_stmt = insert(animes).values(Anime_ID=anime_id,Name=name,Genre=genre,Type=type,Episodes=episodes,Rating=rating,Members=members)
+            conn.execute(insert_stmt)
+            conn.commit()
+            message = 'Added: ' + name + '. A tip: resend the request to list the added entry.'
+            listing.append(message)
+        else:                                                           # if anime exists, skip and show its row
+            for i in conn.execute(select_stmt):                         # same behaviour as line 60
+                print("Already exists, skipping..")
+                listing.append(str(i))
         
-        return listado                                                 
+        return listing                                                 
 
 if __name__== '__main__':
     app.run()
