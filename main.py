@@ -32,7 +32,17 @@ app = Flask(__name__)
 
 @app.route("/")
 def base():
-    return 'This is a new API'
+    return  "This is a new API.\n"\
+            "\n"\
+            "It creates a new sqlite in memory DB and populates it from data/anime.csv.\n"\
+            "\n"\
+            "Methods: \n"\
+            "/all will output first 100 animes, sorted by their anime ID.\n"\
+            "/anime/anime_name lists all anime_name details.\n"\
+            "/anime/add?anime_id=str&name=str&type=str&genre=str&episodes=int&rating=float adds a new entry if absent (and/or lists it if already present).\n"\
+            "\n"\
+            "Running: \n"\
+            "python3 main.py"
 
 @app.route("/all")
 def all():
@@ -62,7 +72,7 @@ def querying_animes(name):
         
         return listing                                                  
 
-@app.route("/anime/add/") # localhost:5000/anime/add?anime_id=9&name=What a beautiful day&type=TV&genre=Action&episodes=123
+@app.route("/anime/add/")                                               # localhost:5000/anime/add?anime_id=9&name=What a beautiful day&type=TV&genre=Action&episodes=123
 def add():
     listing = []
 
