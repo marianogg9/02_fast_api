@@ -16,11 +16,11 @@ The data will be stored in a sqlite db.
 
 3 - Add an animee not existing in the database [X]
 
-4 - Update partially an animee [  ]
+4 - Update partially an animee [X]
 
-5 - Update completely an animee [  ]
+5 - Update completely an animee [X]
 
-6 - Delete an animee [  ]
+6 - Delete an animee [X]
 
 7 - Generate a token for a client
 
