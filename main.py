@@ -41,6 +41,7 @@ def base():
             "/anime/[anime name] lists all [anime name]'s details.\n"\
             "/anime/add?[anime_id=str&name=str&type=str&genre=str&episodes=int&rating=str] adds a new entry if absent (and/or lists it if already present).\n"\
             "/anime/update?anime_id=int[&params] will update anime_id's params.\n"\
+            "/anime/delete?anime_id=int deletes anime_id from the DB.\n"\
             "\n"\
             "Running: \n"\
             "python3 main.py"
@@ -104,7 +105,7 @@ def add():
 @app.route("/anime/update/")
 def update():
     listing = []
-    
+
     with engine.connect() as conn:
         try:
             anime_id = request.args.get('anime_id')
@@ -114,7 +115,7 @@ def update():
             episodes = request.args.get('episodes')
             rating = request.args.get('rating')
             members = request.args.get('members') 
-        except:
+        except: # tried to sanitise input - but it gets skipped.
             listing.append('One of name, genre, type, episodes, rating or members parameter was not found in the request. Please check the parameters and try again.')
             return listing
 
@@ -123,7 +124,6 @@ def update():
         if anime_id:
             if result.first() is None:
                 message = "Anime ID: " + anime_id + " was not found. Please refer to an existing Anime ID. You can get a full list of Animes by accessing the /all endpoint"
-                print('Not found')
             else:
                 for row in conn.execute(select_stmt): # i assume there is a better way of using non empty parameters
                     new_name = name if name else row[1]
@@ -142,6 +142,24 @@ def update():
         listing.append(message)
         return listing
 
+@app.route("/anime/delete")
+def delete():
+    listing = []
+
+    with engine.connect() as conn:
+        anime_id = request.args.get('anime_id')
+        select_stmt = select(animes).where(animes.c.Anime_ID==anime_id)
+        result = conn.execute(select_stmt)
+        if result.first() is None:
+            message = "Anime ID: " + anime_id + " was not found. Please refer to an existing Anime ID. You can get a full list of Animes by accessing the /all endpoint"
+        else:
+            delete_stmt = animes.delete().where(animes.c.Anime_ID==anime_id)
+            conn.execute(delete_stmt)
+            conn.commit()
+            message = 'Deleted Anime ID: ' + anime_id
+        
+        listing.append(message)
+        return listing
 
 if __name__== '__main__':
     app.run()
