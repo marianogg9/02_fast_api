@@ -1,6 +1,6 @@
 import csv
 from flask import Flask,request
-from sqlalchemy import create_engine, select, insert, Table, Column, Integer, MetaData, String
+from sqlalchemy import create_engine, select, insert, update, Table, Column, Integer, MetaData, String
 
 engine = create_engine("sqlite+pysqlite:///local.db", echo=True)        # create a file based DB
 metadata = MetaData()
@@ -34,12 +34,13 @@ app = Flask(__name__)
 def base():
     return  "This is a new API.\n"\
             "\n"\
-            "It creates a new sqlite in memory DB and populates it from data/anime.csv.\n"\
+            "It creates a new sqlite (local FS DB) and populates it from data/anime.csv.\n"\
             "\n"\
             "Methods: \n"\
             "/all will output first 100 animes, sorted by their anime ID.\n"\
-            "/anime/anime_name lists all anime_name details.\n"\
-            "/anime/add?anime_id=str&name=str&type=str&genre=str&episodes=int&rating=float adds a new entry if absent (and/or lists it if already present).\n"\
+            "/anime/[anime name] lists all [anime name]'s details.\n"\
+            "/anime/add?[anime_id=str&name=str&type=str&genre=str&episodes=int&rating=str] adds a new entry if absent (and/or lists it if already present).\n"\
+            "/anime/update?anime_id=int[&params] will update anime_id's params.\n"\
             "\n"\
             "Running: \n"\
             "python3 main.py"
@@ -51,13 +52,12 @@ def all():
     with engine.connect() as conn:                                      # show an ordered set of rows
         stmt = select(animes).limit(100).order_by(animes.c.Anime_ID)
         for i in conn.execute(stmt):
-            # print(i)
             listing.append(str(i))                                      # this has to be JSON serialisable, so sqlalchemy result object (of type = row) won't work for Flask, hence a list
         
         return listing                                                  
 
 @app.route("/anime/<string:name>")
-def querying_animes(name):
+def list(name):
     listing = []
 
     with engine.connect() as conn:                                  
@@ -99,7 +99,49 @@ def add():
                 print("Already exists, skipping..")
                 listing.append(str(i))
         
-        return listing                                                 
+        return listing                         
+
+@app.route("/anime/update/")
+def update():
+    listing = []
+    
+    with engine.connect() as conn:
+        try:
+            anime_id = request.args.get('anime_id')
+            name = request.args.get('name')
+            genre = request.args.get('genre')
+            type = request.args.get('type')
+            episodes = request.args.get('episodes')
+            rating = request.args.get('rating')
+            members = request.args.get('members') 
+        except:
+            listing.append('One of name, genre, type, episodes, rating or members parameter was not found in the request. Please check the parameters and try again.')
+            return listing
+
+        select_stmt = select(animes).where(animes.c.Anime_ID==anime_id)
+        result = conn.execute(select_stmt)
+        if anime_id:
+            if result.first() is None:
+                message = "Anime ID: " + anime_id + " was not found. Please refer to an existing Anime ID. You can get a full list of Animes by accessing the /all endpoint"
+                print('Not found')
+            else:
+                for row in conn.execute(select_stmt): # i assume there is a better way of using non empty parameters
+                    new_name = name if name else row[1]
+                    new_genre = genre if genre else row[2]
+                    new_type = type if type else row[3]
+                    new_episodes = episodes if episodes else row[4]
+                    new_rating = rating if rating else row[5]
+                    new_members = members if members else row[6]
+                update_stmt = animes.update().where(animes.c.Anime_ID==anime_id).values(Name=new_name,Genre=new_genre,Type=new_type,Episodes=new_episodes,Rating=new_rating,Members=new_members)      # why does update() have to be written differently than a select?
+                conn.execute(update_stmt)
+                conn.commit()
+                message = 'Updated Name: ' + new_name + ', Genre: ' + new_genre + ', Type: ' + new_type + ', Episodes: ' + str(new_episodes) + ', Rating: ' + new_rating + ', Members: ' + str(new_members) + ' for Anime ID: ' + anime_id
+        else:
+            message = 'Please include anime_id in the request'
+        
+        listing.append(message)
+        return listing
+
 
 if __name__== '__main__':
     app.run()
