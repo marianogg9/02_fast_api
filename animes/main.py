@@ -22,7 +22,7 @@ def base():
             "/anime/delete?anime_id=int deletes anime_id from the DB.\n"\
             "\n"\
             "Running: \n"\
-            "python3 main.py"
+            "export FLASK_APP=animes && flask run"
 
 @main.route('/all')
 def all():
