@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+  Anime API
+</h1>
+<h2 class="subtitle">
+  Easy authentication and authorization in Flask.
+</h2>
+<p> 
+  It creates a new sqlite (local FS DB) and populates it from data/anime.csv.
+</p>
+<h2>
+  Methods:
+</h2>
+<p>
+  /all will output first 100 animes, sorted by their anime ID.
+</p>
+<p>
+  /anime/[anime name] lists all [anime name]'s details. Also any anime that contains [anime name] in its name.
+</p>
+<p>
+  "/anime/add?[anime_id=str&name=str&type=str&genre=str&episodes=int&rating=str] adds a new entry if absent (and/or lists it if already present).
+</p>
+<p>
+  /anime/update?anime_id=int[&params] will update anime_id's params.
+</p>
+<p>
+  /anime/delete?anime_id=int deletes anime_id from the DB.
+</p>
+<h2>
+  How to run it:
+</h2>
+<p>
+export FLASK_APP=animes
+flask run
+</p>
+{% endblock %}

@@ -1,28 +1,16 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template
 from . import db
 from .models import Anime
 
 main = Blueprint('main', __name__)
 
 @main.route('/profile')
-def profule():
-    return 'Profile'
+def profile():
+    return render_template('profile.html')
 
-@main.route("/")
+@main.route('/')
 def base():
-    return  "This is a new API.\n"\
-            "\n"\
-            "It creates a new sqlite (local FS DB) and populates it from data/anime.csv.\n"\
-            "\n"\
-            "Methods: \n"\
-            "/all will output first 100 animes, sorted by their anime ID.\n"\
-            "/anime/[anime name] lists all [anime name]'s details. Also any anime that contains [anime name] in its name.\n"\
-            "/anime/add?[anime_id=str&name=str&type=str&genre=str&episodes=int&rating=str] adds a new entry if absent (and/or lists it if already present).\n"\
-            "/anime/update?anime_id=int[&params] will update anime_id's params.\n"\
-            "/anime/delete?anime_id=int deletes anime_id from the DB.\n"\
-            "\n"\
-            "Running: \n"\
-            "export FLASK_APP=animes && flask run"
+    return render_template('index.html')
 
 @main.route('/all')
 def all():
@@ -42,7 +30,7 @@ def all():
     return listing
 
 
-@main.route("/anime/<string:name>")
+@main.route('/anime/<string:name>')
 def list(name):
     listing = []
     look_for = '%{0}%'.format(name)
@@ -65,7 +53,7 @@ def list(name):
     
     return listing
 
-@main.route("/anime/add")
+@main.route('/anime/add')
 def add():
     listing = []
     anime_id = request.args.get('anime_id')
@@ -105,7 +93,7 @@ def add():
     
     return listing
 
-@main.route("/anime/update")
+@main.route('/anime/update')
 def update():
     listing = []
     anime_id = request.args.get('anime_id')
@@ -150,7 +138,7 @@ def update():
     
     return listing
 
-@main.route("/anime/delete")
+@main.route('/anime/delete')
 def delete():
     listing = []
 
