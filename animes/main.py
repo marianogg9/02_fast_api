@@ -26,9 +26,8 @@ def base():
 
 @main.route('/all')
 def all():
-    # with app.app_context():
     listing = []
-    for i in Anime.query.order_by(Anime.Anime_ID).limit(10): #db.session.execute(db.select(Anime).order_by(Anime.Anime_ID).limit(10)):
+    for i in Anime.query.order_by(Anime.Anime_ID).limit(100):
         result = {
             "Anime_ID" : i.Anime_ID,
             "Name" : i.Name,
@@ -42,32 +41,29 @@ def all():
         
     return listing
 
-# @app.route("/all")
-# def all():
-#     listing = []
 
-#     with engine.connect() as conn:                                      # show an ordered set of rows
-#         stmt = select(animes).limit(100).order_by(animes.c.Anime_ID)
-#         for i in conn.execute(stmt):
-#             listing.append(str(i))                                      # this has to be JSON serialisable, so sqlalchemy result object (of type = row) won't work for Flask, hence a list
-        
-#         return listing                                                  
-
-# @app.route("/anime/<string:name>")
-# def list(name):
-#     listing = []
-
-#     with engine.connect() as conn:                                  
-#         stmt = select(animes).limit(100).order_by(animes.c.Anime_ID).where(animes.c.Name==name)
-#         result = conn.execute(stmt)
-#         if result.first() is None:
-#             messagge = 'Anime: "' + name + '" not found'
-#             listing.append(messagge)
-#         else:
-#             for i in conn.execute(stmt):                                # kinda weird, not sure why I cannot use 'result' again (it throws as 'qlalchemy.exc.ResourceClosedError: This result object is closed' error)
-#                 listing.append(str(i))
-        
-#         return listing                                                  
+@main.route("/anime/<string:name>")
+def list(name):
+    listing = []
+    look_for = '%{0}%'.format(name)
+    anime = Anime.query.filter(Anime.Name.contains(look_for))
+    if anime.first():
+        for i in anime:
+            result = {
+                "Anime_ID" : i.Anime_ID,
+                "Name" : i.Name,
+                "Genre" : i.Genre,
+                "Type": i.Type,
+                "Episodes": i.Episodes,
+                "Rating": i.Rating,
+                "Members": i.Members
+            }
+            listing.append(result)
+    else:
+        result = 'error: Anime with Name = ' + str(name) + ' not found.'
+        listing.append(result)
+    
+    return listing
 
 # @app.route("/anime/add/")                                               # localhost:5000/anime/add?anime_id=9&name=What a beautiful day&type=TV&genre=Action&episodes=123
 # def add():
