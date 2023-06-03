@@ -81,9 +81,9 @@ def add():
     rating = request.args.get('rating')
     members = request.args.get('members')
 
-    result = Anime.query.filter_by(Anime_ID=anime_id)
+    result = Anime.query.filter_by(Anime_ID=anime_id).first()
 
-    if result.first():
+    if result:
         print('already exists')
         message = 'Anime with Anime_ID: ' + anime_id + ' already exists.'
         listing.append(message)
@@ -105,34 +105,50 @@ def add():
     
     return listing
 
-# @app.route("/anime/add/")                                               # localhost:5000/anime/add?anime_id=9&name=What a beautiful day&type=TV&genre=Action&episodes=123
-# def add():
-#     listing = []
+@main.route("/anime/update")
+def update():
+    listing = []
+    anime_id = request.args.get('anime_id')
+    
+    if anime_id is None:
+        listing.append('Please enter an Anime ID')
+        return listing
+    
+    name = request.args.get('name')
+    genre = request.args.get('genre')
+    type = request.args.get('type')
+    episodes = request.args.get('episodes')
+    rating = request.args.get('rating')
+    members = request.args.get('members')
 
-#     with engine.connect() as conn:                                      
-        # anime_id = request.args.get('anime_id')
-        # name = request.args.get('name')
-        # genre = request.args.get('genre')
-        # type = request.args.get('type')
-        # episodes = request.args.get('episodes')
-        # rating = request.args.get('rating')
-        # members = request.args.get('members')
+    result = Anime.query.filter_by(Anime_ID=anime_id).first()
 
-#         select_stmt = select(animes).where(animes.c.Name==name)
-#         result = conn.execute(select_stmt)
-#         if result.first() is None:                                      # only add a new row if it doesn't exist in the DB
-#             print('Could not find it, adding..')
-#             insert_stmt = insert(animes).values(Anime_ID=anime_id,Name=name,Genre=genre,Type=type,Episodes=episodes,Rating=rating,Members=members)
-#             conn.execute(insert_stmt)
-#             conn.commit()
-#             message = 'Added: ' + name + '. A tip: resend the request to list the added entry.'
-#             listing.append(message)
-#         else:                                                           # if anime exists, skip and show its row
-#             for i in conn.execute(select_stmt):
-#                 print("Already exists, skipping..")
-#                 listing.append(str(i))
-        
-#         return listing                         
+    if result is not None:
+        result.Name = (name if name is not None else result.Name)
+        result.Genre = (genre if genre is not None else result.Genre)
+        result.Type = (type if type is not None else result.Type)
+        result.Episodes = (episodes if episodes is not None else result.Episodes)
+        result.Rating = (rating if rating is not None else result.Rating)
+        result.Members = (members if members is not None else result.Members)
+
+        db.session.commit()
+
+        new_result = Anime.query.filter_by(Anime_ID=anime_id).first()
+        output = {
+                "Anime_ID" : new_result.Anime_ID,
+                "Name" : new_result.Name,
+                "Genre" : new_result.Genre,
+                "Type": new_result.Type,
+                "Episodes": new_result.Episodes,
+                "Rating": new_result.Rating,
+                "Members": new_result.Members
+        }
+        listing.append(output)
+    else:
+        message = 'Anime with Anime ID: ' + anime_id + ' does not exist. Please include an existing Anime ID.'
+        listing.append(message)
+    
+    return listing
 
 # @app.route("/anime/update/")
 # def update():
