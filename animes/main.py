@@ -1,18 +1,21 @@
 from flask import Blueprint, request, render_template
 from . import db
 from .models import Anime
+from flask_login import login_required,current_user
 
 main = Blueprint('main', __name__)
 
 @main.route('/profile')
+@login_required
 def profile():
-    return render_template('profile.html')
+    return render_template('profile.html', name=current_user.name)
 
 @main.route('/')
-def base():
+def index():
     return render_template('index.html')
 
 @main.route('/all')
+@login_required
 def all():
     listing = []
     for i in Anime.query.order_by(Anime.Anime_ID).limit(100):
@@ -31,6 +34,7 @@ def all():
 
 
 @main.route('/anime/<string:name>')
+@login_required
 def list(name):
     listing = []
     look_for = '%{0}%'.format(name)
@@ -54,6 +58,7 @@ def list(name):
     return listing
 
 @main.route('/anime/add')
+@login_required
 def add():
     listing = []
     anime_id = request.args.get('anime_id')
@@ -94,6 +99,7 @@ def add():
     return listing
 
 @main.route('/anime/update')
+@login_required
 def update():
     listing = []
     anime_id = request.args.get('anime_id')
@@ -139,6 +145,7 @@ def update():
     return listing
 
 @main.route('/anime/delete')
+@login_required
 def delete():
     listing = []
 
