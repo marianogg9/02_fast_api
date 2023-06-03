@@ -111,7 +111,7 @@ def update():
 
     result = Anime.query.filter_by(Anime_ID=anime_id).first()
 
-    if result is not None:
+    if result:
         result.Name = (name if name is not None else result.Name)
         result.Genre = (genre if genre is not None else result.Genre)
         result.Type = (type if type is not None else result.Type)
@@ -150,7 +150,7 @@ def delete():
     
     result = Anime.query.filter_by(Anime_ID=anime_id).first()
 
-    if result is not None:
+    if result:
         db.session.delete(result)
         db.session.commit()
         message = 'Anime with Anime ID: ' + anime_id + ' has been deleted from the DB.'
