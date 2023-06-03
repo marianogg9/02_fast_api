@@ -24,7 +24,7 @@ The data will be stored in a sqlite db.
 
 7 - Generate a token for a client
 
-8 - Only authenticated clients can interact with the API
+8 - Only authenticated clients can interact with the API [X]
 
 ## Docs
 
