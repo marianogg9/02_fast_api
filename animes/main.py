@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from . import db
 from .models import Anime
 
@@ -49,7 +49,7 @@ def list(name):
     anime = Anime.query.filter(Anime.Name.contains(look_for))
     if anime.first():
         for i in anime:
-            result = {
+            output = {
                 "Anime_ID" : i.Anime_ID,
                 "Name" : i.Name,
                 "Genre" : i.Genre,
@@ -58,10 +58,50 @@ def list(name):
                 "Rating": i.Rating,
                 "Members": i.Members
             }
-            listing.append(result)
+            listing.append(output)
     else:
-        result = 'error: Anime with Name = ' + str(name) + ' not found.'
-        listing.append(result)
+        output = 'error: Anime with Name = ' + str(name) + ' not found.'
+        listing.append(output)
+    
+    return listing
+
+@main.route("/anime/add")
+def add():
+    listing = []
+    anime_id = request.args.get('anime_id')
+    
+    if anime_id is None:
+        listing.append('Please enter an Anime ID')
+        return listing
+    
+    name = request.args.get('name')
+    genre = request.args.get('genre')
+    type = request.args.get('type')
+    episodes = request.args.get('episodes')
+    rating = request.args.get('rating')
+    members = request.args.get('members')
+
+    result = Anime.query.filter_by(Anime_ID=anime_id)
+
+    if result.first():
+        print('already exists')
+        message = 'Anime with Anime_ID: ' + anime_id + ' already exists.'
+        listing.append(message)
+    else:
+        new_anime = Anime(Anime_ID=anime_id,Name=name,Genre=genre,Type=type,Episodes=episodes,Rating=rating,Members=members)
+        db.session.add(new_anime)
+        db.session.commit()
+        new_result = Anime.query.filter_by(Anime_ID=anime_id).first()
+        output = {
+                "Anime_ID" : new_result.Anime_ID,
+                "Name" : new_result.Name,
+                "Genre" : new_result.Genre,
+                "Type": new_result.Type,
+                "Episodes": new_result.Episodes,
+                "Rating": new_result.Rating,
+                "Members": new_result.Members
+        }
+        listing.append(output)
     
     return listing
 
@@ -70,13 +110,13 @@ def list(name):
 #     listing = []
 
 #     with engine.connect() as conn:                                      
-#         anime_id = request.args.get('anime_id')
-#         name = request.args.get('name')
-#         genre = request.args.get('genre')
-#         type = request.args.get('type')
-#         episodes = request.args.get('episodes')
-#         rating = request.args.get('rating')
-#         members = request.args.get('members')
+        # anime_id = request.args.get('anime_id')
+        # name = request.args.get('name')
+        # genre = request.args.get('genre')
+        # type = request.args.get('type')
+        # episodes = request.args.get('episodes')
+        # rating = request.args.get('rating')
+        # members = request.args.get('members')
 
 #         select_stmt = select(animes).where(animes.c.Name==name)
 #         result = conn.execute(select_stmt)
