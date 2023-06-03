@@ -1,6 +1,6 @@
 import csv
-from flask import Flask,request
-from sqlalchemy import create_engine, select, insert, update, Table, Column, Integer, MetaData, String
+from flask import Flask, request
+from sqlalchemy import create_engine, select, insert, Table, Column, Integer, MetaData, String
 
 engine = create_engine("sqlite+pysqlite:///local.db", echo=True)        # create a file based DB
 metadata = MetaData()
