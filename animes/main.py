@@ -16,7 +16,7 @@ def base():
             "\n"\
             "Methods: \n"\
             "/all will output first 100 animes, sorted by their anime ID.\n"\
-            "/anime/[anime name] lists all [anime name]'s details.\n"\
+            "/anime/[anime name] lists all [anime name]'s details. Also any anime that contains [anime name] in its name.\n"\
             "/anime/add?[anime_id=str&name=str&type=str&genre=str&episodes=int&rating=str] adds a new entry if absent (and/or lists it if already present).\n"\
             "/anime/update?anime_id=int[&params] will update anime_id's params.\n"\
             "/anime/delete?anime_id=int deletes anime_id from the DB.\n"\
