@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request,flash
 from werkzeug.security import generate_password_hash,check_password_hash
 from .models import User
 from . import db
+from flask_login import login_user
 
 auth = Blueprint('auth', __name__)
 
@@ -41,13 +42,14 @@ def login_post():
     user = User.query.filter_by(email=email).first()
 
     if not user:
-        flash('Email not found, please signup')
-        return redirect(url_for('auth.signup'))
+        flash('Incorrect email or password')
+        return redirect(url_for('auth.login'))
     
     if not check_password_hash(user.password,password):
         flash('Incorrect email or password')
         return redirect(url_for('auth.login'))
     
+    login_user(user,remember=remember)
     return redirect(url_for('main.profile'))
 
 @auth.route('/logout')
