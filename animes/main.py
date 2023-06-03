@@ -150,64 +150,25 @@ def update():
     
     return listing
 
-# @app.route("/anime/update/")
-# def update():
-#     listing = []
+@main.route("/anime/delete")
+def delete():
+    listing = []
 
-#     with engine.connect() as conn:
-#         try:
-#             anime_id = request.args.get('anime_id')
-#             name = request.args.get('name')
-#             genre = request.args.get('genre')
-#             type = request.args.get('type')
-#             episodes = request.args.get('episodes')
-#             rating = request.args.get('rating')
-#             members = request.args.get('members') 
-#         except: # tried to sanitise input - but it gets skipped.
-#             listing.append('One of name, genre, type, episodes, rating or members parameter was not found in the request. Please check the parameters and try again.')
-#             return listing
+    anime_id = request.args.get('anime_id')
+    
+    if anime_id is None:
+        listing.append('Please enter an Anime ID')
+        return listing
+    
+    result = Anime.query.filter_by(Anime_ID=anime_id).first()
 
-#         select_stmt = select(animes).where(animes.c.Anime_ID==anime_id)
-#         result = conn.execute(select_stmt)
-#         if anime_id:
-#             if result.first() is None:
-#                 message = "Anime ID: " + anime_id + " was not found. Please refer to an existing Anime ID. You can get a full list of Animes by accessing the /all endpoint"
-#             else:
-#                 for row in conn.execute(select_stmt): # i assume there is a better way of using non empty parameters
-#                     new_name = name if name else row[1]
-#                     new_genre = genre if genre else row[2]
-#                     new_type = type if type else row[3]
-#                     new_episodes = episodes if episodes else row[4]
-#                     new_rating = rating if rating else row[5]
-#                     new_members = members if members else row[6]
-#                 update_stmt = animes.update().where(animes.c.Anime_ID==anime_id).values(Name=new_name,Genre=new_genre,Type=new_type,Episodes=new_episodes,Rating=new_rating,Members=new_members)      # why does update() have to be written differently than a select?
-#                 conn.execute(update_stmt)
-#                 conn.commit()
-#                 message = 'Updated Name: ' + new_name + ', Genre: ' + new_genre + ', Type: ' + new_type + ', Episodes: ' + str(new_episodes) + ', Rating: ' + new_rating + ', Members: ' + str(new_members) + ' for Anime ID: ' + anime_id
-#         else:
-#             message = 'Please include anime_id in the request'
-        
-#         listing.append(message)
-#         return listing
-
-# @app.route("/anime/delete")
-# def delete():
-#     listing = []
-
-#     with engine.connect() as conn:
-#         anime_id = request.args.get('anime_id')
-#         select_stmt = select(animes).where(animes.c.Anime_ID==anime_id)
-#         result = conn.execute(select_stmt)
-#         if result.first() is None:
-#             message = "Anime ID: " + anime_id + " was not found. Please refer to an existing Anime ID. You can get a full list of Animes by accessing the /all endpoint"
-#         else:
-#             delete_stmt = animes.delete().where(animes.c.Anime_ID==anime_id)
-#             conn.execute(delete_stmt)
-#             conn.commit()
-#             message = 'Deleted Anime ID: ' + anime_id
-        
-#         listing.append(message)
-#         return listing
-
-# if __name__== '__main__':
-#     app.run()
+    if result is not None:
+        db.session.delete(result)
+        db.session.commit()
+        message = 'Anime with Anime ID: ' + anime_id + ' has been deleted from the DB.'
+        listing.append(message)
+    else:
+        message = 'Anime with Anime ID: ' + anime_id + ' does not exist. Please include an existing Anime ID.'
+        listing.append(message)
+    
+    return listing
