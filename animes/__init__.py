@@ -1,4 +1,4 @@
-import csv
+import csv, os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -8,7 +8,7 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     
-    app.config['SECRET_KEY'] = b'9-/;,mM13XgQ;$X!'                              # dummy key
+    app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']                           # dummy key
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///animes.db'
 
     db.init_app(app)
