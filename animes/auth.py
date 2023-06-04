@@ -1,56 +1,78 @@
-from flask import Blueprint, render_template, redirect, url_for, request,flash
+from flask import Blueprint, redirect, url_for, request, make_response
 from werkzeug.security import generate_password_hash,check_password_hash
 from .models import User
 from . import db
-from flask_login import login_user,current_user,login_required,logout_user
+from flask_login import login_required,logout_user
+import os
 
 auth = Blueprint('auth', __name__)
+secret = os.environ['FLASK_SECRET_KEY']
 
 @auth.route('/signup')
 def signup():
-    return render_template('signup.html')
+    return "Signup: curl -XPOST -d '\"email\":\"your_email\",\"password\":\"your_password\"}' -H 'Content-Type: application/json' server_address:port/signup"
 
 @auth.route('/signup', methods = ['POST'])
 def signup_post():
-    email = request.form.get('email')
-    name = request.form.get('name')
-    password = request.form.get('password')
-
-    user = User.query.filter_by(email=email).first()
-
-    if user:
-        flash('Email already in use')
-        return redirect(url_for('auth.signup')) # user exists in DB, redirect back to signup page with a popup message
-
-    new_user = User(email=email,name=name,password=generate_password_hash(password,method='sha256'))
-
-    db.session.add(new_user) 
-    db.session.commit()                         # add user to DB
-
-    return redirect(url_for('auth.login'))
+    post_data = request.get_json()
+    user = User.query.filter_by(email=post_data.get('email')).first()
+    if not user:
+        try:
+            new_user = User(email=post_data.get('email'),name=post_data.get('name'),password=generate_password_hash(post_data.get('password'),method='scrypt'))
+            db.session.add(new_user)
+            db.session.commit()
+            auth_token = new_user.encode_auth_token(new_user.id, secret)
+            response_object = {
+                'status': 'success',
+                'message': 'Successfully registered.',
+                'auth_token': auth_token.decode("utf-8")
+            }
+            #print(response_object)
+            return make_response(response_object), 201
+        except Exception:
+            #logging.exception('some error')
+            response_object = {
+                'status': 'fail',
+                'message': 'Some error occurred. Please try again.'
+            }
+            return make_response(response_object), 401
+    else:
+        response_object = {
+            'status': 'fail',
+            'message': 'User already exists. Please Log in'
+        }
+        return make_response(response_object), 202
 
 @auth.route('/login')
 def login():
-    return render_template('login.html')
+    return "Login: curl -XPOST -d '\"email\":\"your_email\",\"password\":\"your_password\"}' -H 'Content-Type: application/json' server_address:port/login"
 
 @auth.route('/login', methods=['POST'])
 def login_post():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    remember = True if request.form.get('remember') else False
-
-    user = User.query.filter_by(email=email).first()
-
-    if not user:
-        flash('Email not found')
-        return redirect(url_for('auth.login'))
-    
-    if not check_password_hash(user.password,password):
-        flash('Incorrect email or password')
-        return redirect(url_for('auth.login'))
-    
-    login_user(user,remember=remember)
-    return redirect(url_for('main.profile',name=current_user.name))
+    post_data = request.get_json()
+    try:
+        user = User.query.filter_by(email=post_data.get('email')).first()
+        if user and check_password_hash(user.password,post_data.get('password')):
+            auth_token = user.encode_auth_token(user.id,secret)
+            if auth_token:
+                response_object = {
+                    'status': 'success',
+                    'message': 'Successfully logged in.',
+                    'auth_token': auth_token.decode("utf-8")
+                }
+                return make_response(response_object), 200
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'User does not exist.'
+            }
+            return make_response(response_object), 404
+    except Exception as e:
+        response_object = {
+            'status': 'fail',
+            'message': 'Try again.'
+        }
+        return make_response(response_object), 500
 
 @auth.route('/logout')
 @login_required

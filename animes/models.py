@@ -1,5 +1,5 @@
-from flask_login import UserMixin
 from . import db
+import datetime, jwt
 
 class Anime(db.Model):
         Anime_ID = db.Column(db.Integer,primary_key=True)
@@ -10,8 +10,35 @@ class Anime(db.Model):
         Rating = db.Column(db.String)
         Members = db.Column(db.Integer)
 
-class User(UserMixin, db.Model):
+class User(db.Model):
         id = db.Column(db.Integer,primary_key=True)
         email = db.Column(db.String(100),unique=True)
         password = db.Column(db.String(100))
         name = db.Column(db.String(100))
+
+        def encode_auth_token(self, user_id, secret):
+                try:
+                        payload = {
+                                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0,seconds=300),
+                                'iat': datetime.datetime.utcnow(),
+                                'sub': user_id
+                        }
+                        return jwt.encode(
+                                payload,
+                                secret,
+                                algorithm='HS256'
+                        )
+                except Exception as e:
+                        return e
+                
+        @staticmethod
+        def decode_auth_token(auth_token,secret):
+                try:
+                        payload = jwt.decode(auth_token,secret)
+                        return payload['sub']
+                except jwt.ExpiredSignature:
+                        return 'JWT token expired, login again'
+                except jwt.InvalidTokenError:
+                        return 'Invalid token, login again'
+                
+        
