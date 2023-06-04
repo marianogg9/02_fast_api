@@ -22,7 +22,7 @@ The data will be stored in a sqlite db.
 
 6 - Delete an animee [X]
 
-7 - Generate a token for a client
+7 - Generate a token for a client [X]
 
 8 - Only authenticated clients can interact with the API [X]
 
