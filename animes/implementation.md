@@ -22,6 +22,12 @@ This is an API to list an Anime from local DB.
     pip install -r requirements.txt
     ```
 
+- Export variables
+    ```bash
+    export FLASK_SECRET_KEY=your_key
+    export FLASK_APP=animes
+    ```
+
 - Run
     ```bash
     flask run
