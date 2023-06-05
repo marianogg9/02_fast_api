@@ -39,3 +39,18 @@ This is an API to list an Anime from local DB.
 - [Werkzeug Docs](https://werkzeug.palletsprojects.com/en/2.3.x/utils/).
 - [Flask make_response method](https://tedboy.github.io/flask/generated/flask.make_response.html).
 - [Flask SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/models/#defining-models).
+
+## ToDo
+- Add tests.
+- Implement logout (JWT token blacklisting).
+
+## Changelog
+
+- [1.1](https://github.com/marianogg9/02_fast_api/releases/tag/1.1)
+    
+    - added JWT support.
+    - added API documentation.
+
+- [1.0](https://github.com/marianogg9/02_fast_api/releases/tag/1.0)
+    
+    - Basic authorization support.
