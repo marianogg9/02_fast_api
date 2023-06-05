@@ -8,6 +8,26 @@ secret = os.environ['FLASK_SECRET_KEY']
 
 @main.route('/profile')
 def profile():
+    '''
+    Get information about the logged session
+
+    Request headers:
+        
+        Authorization (JWT token from signup/login)::string
+
+    Input:
+
+        none
+
+    Output:
+
+        JSON object:
+            data:
+                email::string
+                user_id::int
+            status::string
+            
+    '''
     auth_header = request.headers.get('Authorization')
     if auth_header:
         print(auth_header.split(" ")[0])
@@ -40,10 +60,28 @@ def profile():
 
 @main.route('/')
 def index():
+    '''
+    Show a minimal API documentation page
+    '''
     return render_template('index.html')
 
 @main.route('/all')
 def all():
+    '''
+    List first 100 animes per anime id
+
+    Request headers:
+        
+        Authorization (JWT token from signup/login)::string
+    
+    Input:
+
+        none
+
+    Output:
+
+        JSON list
+    '''
     auth_header = request.headers.get('Authorization')
     if auth_header:
         print(auth_header.split(" ")[0])
@@ -81,6 +119,28 @@ def all():
 
 @main.route('/anime/<string:name>')
 def list(name):
+    '''
+    Get information about a given anime by its name
+
+    Request headers:
+        
+        Authorization (JWT token from signup/login)::string
+
+    Input: 
+
+        name::string (required)
+
+    Output: 
+
+        JSON object:
+            anime_id::int
+            name::string
+            genre::string
+            type::string
+            episodes::int
+            rating::string
+            members::int
+    '''
     auth_header = request.headers.get('Authorization')
     if auth_header:
         print(auth_header.split(" ")[0])
@@ -124,6 +184,31 @@ def list(name):
 
 @main.route('/anime/add')
 def add():
+    '''
+    Add a new anime
+
+    Request headers:
+        
+        Authorization (JWT token from signup/login)::string
+
+    Input:
+
+        Querystring:
+
+            anime_id::int (required)
+            name::string (optional)
+            genre::string (optional)
+            type::string (optional)
+            episodes::int (optional)
+            rating::string (optional)
+            members::int (optional)
+    
+    Output:
+
+        JSON:
+
+            confirmation message::string
+    '''
     auth_header = request.headers.get('Authorization')
     if auth_header:
         print(auth_header.split(" ")[0])
@@ -184,6 +269,37 @@ def add():
 
 @main.route('/anime/update')
 def update():
+    '''
+    Update an existing anime
+
+    Request headers:
+        
+        Authorization (JWT token from signup/login)::string
+
+    Input:
+
+        Querystring:
+
+            anime_id::int (required)
+            name::string (optional)
+            genre::string (optional)
+            type::string (optional)
+            episodes::int (optional)
+            rating::string (optional)
+            members::int (optional)
+    
+    Output:
+
+        JSON object:
+
+            anime_id::int
+            name::string
+            genre::string
+            type::string
+            episodes::int
+            rating::string
+            members::int
+    '''
     auth_header = request.headers.get('Authorization')
     if auth_header:
         print(auth_header.split(" ")[0])
@@ -250,6 +366,25 @@ def update():
 
 @main.route('/anime/delete')
 def delete():
+    '''
+    Delete an exsiting anime
+
+    Request headers:
+        
+        Authorization (JWT token from signup/login)::string
+        
+    Input:
+
+        Querystring:
+
+            anime_id::int (required)
+    
+    Output:
+
+        JSON:
+
+            confirmation message::string
+    '''
     auth_header = request.headers.get('Authorization')
     if auth_header:
         print(auth_header.split(" ")[0])
