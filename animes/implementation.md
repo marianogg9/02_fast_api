@@ -1,6 +1,37 @@
 # Implementation
 
-## 
+This is an API to list an Anime from local DB.
+
+## Components
+- Flask.
+- SQLAlchemy.
+- JWT support.
+
+## How to run
+- Use a virtualenv
+    ```bash
+    python3.9 -m venv .venv
+    ```
+    (and activate it)
+    ```bash
+    source .venv/bin/activate
+    ```
+
+- Install dependencies
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+- Run
+    ```bash
+    flask run
+    ```
+
+- See API documentation
+    ```bash
+    pdoc animes
+    ```
+    It will open a browser in `localhost:8080` with the API documentation.
 
 ## Resources
 - [Real Python Flask JWT auth tutorial](https://realpython.com/token-based-authentication-with-flask/).
