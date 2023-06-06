@@ -52,11 +52,11 @@ This is an API to list an Anime from local DB.
 
 ## Changelog
 
-- [1.1](https://github.com/marianogg9/02_fast_api/releases/tag/1.1)
+- **1.1**
     
     - added JWT support.
     - added API documentation.
 
-- [1.0](https://github.com/marianogg9/02_fast_api/releases/tag/1.0)
+- **1.0**
     
     - Basic authorization support.
