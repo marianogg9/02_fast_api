@@ -182,7 +182,7 @@ def list(name):
         }
         return make_response(response_object), 401
 
-@main.route('/anime/add')
+@main.route('/anime/add', methods=['POST'])
 def add():
     '''
     Add a new anime
@@ -267,7 +267,7 @@ def add():
         }
         return make_response(response_object), 401
 
-@main.route('/anime/update')
+@main.route('/anime/update', mehtods=['PATCH'])
 def update():
     '''
     Update an existing anime
@@ -364,7 +364,7 @@ def update():
         }
         return make_response(response_object), 401
 
-@main.route('/anime/delete')
+@main.route('/anime/delete', methods=['DELETE'])
 def delete():
     '''
     Delete an exsiting anime
@@ -372,7 +372,7 @@ def delete():
     Request headers:
         
         Authorization (JWT token from signup/login)::string
-        
+
     Input:
 
         Querystring:
