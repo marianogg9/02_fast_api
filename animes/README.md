@@ -52,11 +52,11 @@ This is an API to list an Anime from local DB.
 
 ## Changelog
 
-- **1.1**
+- [1.1](https://github.com/marianogg9/flasking/commit/a73a18edddeaa90fc9bbe7cfae4b283da60b7894)
     
     - added JWT support.
     - added API documentation.
 
-- **1.0**
+- [1.0](https://github.com/marianogg9/flasking/commit/0befc32708fec0c663d8d987803dec61ef661b60)
     
     - Basic authorization support.
