@@ -63,7 +63,7 @@ def index():
     '''
     Show a minimal API documentation page
     '''
-    return render_template('index.html')
+    return render_template('base.html')
 
 @main.route('/all')
 def all():
@@ -267,7 +267,7 @@ def add():
         }
         return make_response(response_object), 401
 
-@main.route('/anime/update', mehtods=['PATCH'])
+@main.route('/anime/update', methods=['PATCH'])
 def update():
     '''
     Update an existing anime

@@ -6,14 +6,16 @@ import csv, os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flasgger import Swagger
 
 db = SQLAlchemy()
 
 def create_app():
-    '''
+    """
     Flask app initialization and DB population (from input CSV)
-    '''
+    """
     app = Flask(__name__)
+    swagger = Swagger(app)
     
     app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']                           # dummy key
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///animes.db'
