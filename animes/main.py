@@ -8,59 +8,39 @@ from .auth import login_required
 main = Blueprint('main', __name__)
 secret = os.environ['FLASK_SECRET_KEY']
 
-# @main.route('/profile')
-# @swag_from('apidocs/profile.yaml')
-# @login_required
-# def profile():
-#     '''
-#     Get information about the logged session
-
-#     Request headers:
-        
-#         Authorization (JWT token from signup/login)::string
-
-#     Input:
-
-#         none
-
-#     Output:
-
-#         JSON object:
-#             data:
-#                 email::string
-#                 user_id::int
-#             status::string
-            
-#     '''
-#     auth_header = request.headers.get('Authorization')
-#     if auth_header:
-#         print(auth_header.split(" ")[0])
-#         auth_token = auth_header.split(" ")[0]
-#     else:
-#         auth_token = ''
-#     if auth_token:
-#         resp = User.decode_auth_token(auth_token,secret)
-#         if not isinstance(resp,str):
-#             user = User.query.filter_by(id=resp).first()
-#             response_object = {
-#                 'status': 'success',
-#                 'data': {
-#                     'user_id': user.id,
-#                     'email': user.email
-#                 }
-#             }
-#             return make_response(response_object), 200
-#         response_object = {
-#             'status': 'fail',
-#             'message': resp
-#         }
-#         return make_response(response_object), 401
-#     else:
-#         response_object = {
-#             'status': 'fail',
-#             'message': 'Provide a valid token'
-#         }
-#         return make_response(response_object), 401
+@main.route('/profile')
+@swag_from('apidocs/profile.yaml')
+@login_required
+def profile():
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        print(auth_header.split(" ")[0])
+        auth_token = auth_header.split(" ")[0]
+    else:
+        auth_token = ''
+    if auth_token:
+        resp = User.decode_auth_token(auth_token,secret)
+        if not isinstance(resp,str):
+            user = User.query.filter_by(id=resp).first()
+            response_object = {
+                'status': 'success',
+                'data': {
+                    'user_id': user.id,
+                    'email': user.email
+                }
+            }
+            return make_response(response_object), 200
+        response_object = {
+            'status': 'fail',
+            'message': resp
+        }
+        return make_response(response_object), 401
+    else:
+        response_object = {
+            'status': 'fail',
+            'message': 'Provide a valid token'
+        }
+        return make_response(response_object), 401
 
 @main.route('/')
 @swag_from('apidocs/base.yaml')
