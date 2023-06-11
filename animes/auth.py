@@ -1,13 +1,41 @@
-from flask import Blueprint, redirect, url_for, request, make_response
+from flask import Blueprint, redirect, url_for, request, make_response, g
 from werkzeug.security import generate_password_hash,check_password_hash
 from .models import User
 from . import db
 from flask_login import login_required,logout_user
 import os
 from flasgger import swag_from
+from functools import wraps
 
 auth = Blueprint('auth', __name__)
 secret = os.environ['FLASK_SECRET_KEY']
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args,**kwargs):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            print(auth_header.split(" ")[0])
+            auth_token = auth_header.split(" ")[0]
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = User.decode_auth_token(auth_token,secret)
+            if isinstance(resp,str):
+                response_object = {
+                    'status': 'fail',
+                    'message': resp
+                }
+                return make_response(response_object), 401
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'Provide a valid token'
+            }
+            return make_response(response_object), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 @auth.route('/signup')
 def signup():
