@@ -45,15 +45,11 @@ This is an API to list an Anime from local DB.
 - [Flask SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/models/#defining-models).
 - [Flasgger](https://github.com/flasgger/flasgger) docs.
 
-## ToDo
-- Add tests.
-- Implement logout (JWT token blacklisting).
-
 ## Changelog
 - [1.3](https://github.com/marianogg9/flasking/commit/ac1b5eee6468e18c4e476dee36dcdb8ff270a6a8)
     - added tests.
     - updated documentation.
-    
+
 - [1.2](https://github.com/marianogg9/flasking/commit/7c0bbca6c2eaf6e4944c0a5e964dc5bc27cebe02)
     - added Swagger support.
     - refactored `login_required` decorator.
