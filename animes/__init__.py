@@ -1,7 +1,3 @@
-"""
-.. include:: README.md
-"""
-
 import csv, os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy

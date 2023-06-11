@@ -4,6 +4,7 @@ from .models import User
 from . import db
 from flask_login import login_required,logout_user
 import os
+from flasgger import swag_from
 
 auth = Blueprint('auth', __name__)
 secret = os.environ['FLASK_SECRET_KEY']
@@ -16,6 +17,7 @@ def signup():
     return "Signup: curl -XPOST -d '\"email\":\"your_email\",\"password\":\"your_password\"}' -H 'Content-Type: application/json' server_address:port/signup"
 
 @auth.route('/signup', methods = ['POST'])
+@swag_from('apidocs/signup.yaml')
 def signup_post():
     '''
     Signup
@@ -72,6 +74,7 @@ def login():
     return "Login: curl -XPOST -d '\"email\":\"your_email\",\"password\":\"your_password\"}' -H 'Content-Type: application/json' server_address:port/login"
 
 @auth.route('/login', methods=['POST'])
+@swag_from('apidocs/login.yaml')
 def login_post():
     '''
     Login

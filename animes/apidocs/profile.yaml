@@ -1,0 +1,17 @@
+Get information about the logged session.
+---
+Request headers:
+    
+    Authorization (JWT token from signup/login)::string
+
+Input:
+
+    none
+
+Output:
+
+    JSON object:
+        data:
+            email: string
+            user_id: int
+        status: string

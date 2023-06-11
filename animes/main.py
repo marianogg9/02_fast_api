@@ -2,11 +2,13 @@ from flask import Blueprint, request, render_template, make_response
 from . import db
 from .models import Anime, User
 import os
+from flasgger import swag_from
 
 main = Blueprint('main', __name__)
 secret = os.environ['FLASK_SECRET_KEY']
 
 @main.route('/profile')
+@swag_from('apidocs/profile.yaml')
 def profile():
     '''
     Get information about the logged session
@@ -59,6 +61,7 @@ def profile():
         return make_response(response_object), 401
 
 @main.route('/')
+@swag_from('apidocs/base.yaml')
 def index():
     '''
     Show a minimal API documentation page
@@ -66,6 +69,7 @@ def index():
     return render_template('base.html')
 
 @main.route('/all')
+@swag_from('apidocs/all.yaml')
 def all():
     '''
     List first 100 animes per anime id
@@ -118,6 +122,7 @@ def all():
 
 
 @main.route('/anime/<string:name>')
+@swag_from('apidocs/get_anime.yaml')
 def list(name):
     '''
     Get information about a given anime by its name
@@ -183,6 +188,7 @@ def list(name):
         return make_response(response_object), 401
 
 @main.route('/anime/add', methods=['POST'])
+@swag_from('apidocs/add_anime.yaml')
 def add():
     '''
     Add a new anime
@@ -268,6 +274,7 @@ def add():
         return make_response(response_object), 401
 
 @main.route('/anime/update', methods=['PATCH'])
+@swag_from('apidocs/update_anime.yaml')
 def update():
     '''
     Update an existing anime
@@ -365,6 +372,7 @@ def update():
         return make_response(response_object), 401
 
 @main.route('/anime/delete', methods=['DELETE'])
+@swag_from('apidocs/delete_anime.yaml')
 def delete():
     '''
     Delete an exsiting anime

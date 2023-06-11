@@ -1,0 +1,30 @@
+Get information about a given anime by its name
+---
+
+Request headers:
+    
+    Authorization (JWT token from signup/login)::string
+
+Input: 
+
+    name: 
+      type: string
+      required: true
+
+Output: 
+
+    JSON object:
+        anime_id:
+          type: int
+        name:
+          type: string
+        genre:
+          type: string
+        type:
+          type: string
+        episodes:
+          type: int
+        rating:
+          type: string
+        members:
+          type: int

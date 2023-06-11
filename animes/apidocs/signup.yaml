@@ -1,0 +1,16 @@
+Signup.
+---
+Input:
+
+    JSON object:
+        
+        email: string
+        password: string
+
+Output:
+
+    JSON object:
+
+        auth_token: string
+        message: string
+        status: string

@@ -1,0 +1,38 @@
+Add a new anime.
+---
+
+Request headers:
+    
+    Authorization (JWT token from signup/login): string
+
+Input:
+
+    Querystring:
+
+        anime_id:
+          type: int
+          required: true
+        name:
+          type: string
+          required: false
+        genre:
+          type: string
+          required: false
+        type:
+          type: string
+          required: false
+        episodes:
+          type: string
+          required: false
+        rating:
+          type: string
+          required: false
+        members:
+          type: string
+          required: false
+
+Output:
+
+    JSON:
+
+        confirmation message: string

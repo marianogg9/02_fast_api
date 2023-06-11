@@ -1,0 +1,20 @@
+Delete an exsiting anime.
+---
+
+Request headers:
+    
+    Authorization (JWT token from signup/login): string
+
+Input:
+
+    Querystring:
+
+        anime_id:
+          type: int
+          required: true
+
+Output:
+
+    JSON:
+
+        confirmation message: string

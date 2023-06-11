@@ -1,0 +1,11 @@
+List first 100 animes per anime id
+---
+
+Request headers:    
+    Authorization (JWT token from signup/login)::string
+
+Input:
+    none
+
+Output:
+    JSON list
