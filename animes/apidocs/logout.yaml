@@ -1,0 +1,11 @@
+Logout.
+---
+
+Request headers:    
+    Authorization (JWT token from signup/login): string
+
+Input:
+    none
+
+Output:
+    JSON object

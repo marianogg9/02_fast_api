@@ -154,6 +154,7 @@ def logout():
     return redirect(url_for('main.index'))
 
 @auth.route('/logout', methods = ['POST'])
+@swag_from('apidocs/logout.yaml')
 @login_required
 def logout_post():
 
