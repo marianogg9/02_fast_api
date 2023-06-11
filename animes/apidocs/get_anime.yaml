@@ -1,30 +1,50 @@
-Get information about a given anime by its name
+Get information about a given anime by its name.
 ---
+parameters:
+- name: name
+  in: path
+  type: string
+  required: true
+  default: none
+- name: querystring
+  in: querystring
+  enum: ['anime_id::int','genre::string','type::string','episodes::int','rating::string','members::int']
+  default: none
 
-Request headers:
-    
-    Authorization (JWT token from signup/login)::string
+definitions:
+  Animes:
+    type: array
+    items:
+      $ref: '#/definitions/Anime'
+  Anime:
+    type: object
+    properties:
+      Anime_ID:
+        type: string
+      Genre:
+        type: string
+      Type:
+        type: string
+      Episodes:
+        type: integer
+      Members:
+        type: integer
+      Rating:
+        type: string
+  Error:
+    type: object
+    properties:
+      status: 
+        type: string
+      message: 
+        type: string
 
-Input: 
-
-    name: 
-      type: string
-      required: true
-
-Output: 
-
-    JSON object:
-        anime_id:
-          type: int
-        name:
-          type: string
-        genre:
-          type: string
-        type:
-          type: string
-        episodes:
-          type: int
-        rating:
-          type: string
-        members:
-          type: int
+responses:
+    200:
+        description: Success.
+        schema:
+          $ref: '#/definitions/Animes'
+    401:
+        description: Invalid token or other general Exception.
+        schema:
+          $ref: '#/definitions/Error'

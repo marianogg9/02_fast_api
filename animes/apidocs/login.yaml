@@ -1,17 +1,8 @@
 Login.
 ---
 
-Input:
-
-    JSON object:
-        
-        email: string
-        password: string
-
-Output:
-
-    JSON object:
-
-        auth_token: string
-        message: string
-        status: string
+responses:
+    200:
+        description: Successfully logged out.
+    401:
+        description: Invalid token or other general Exception.

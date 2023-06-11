@@ -26,7 +26,7 @@ def login_required(f):
                     'status': 'fail',
                     'message': resp
                 }
-                return make_response(response_object), 401
+                return make_response(response_object), 402
         else:
             response_object = {
                 'status': 'fail',
@@ -181,7 +181,7 @@ def logout_post():
                     'status': 'fail',
                     'message': e
                 }
-                return make_response(response_object), 200
+                return make_response(response_object), 201
         else:
             response_object = {
                 'status': 'fail',

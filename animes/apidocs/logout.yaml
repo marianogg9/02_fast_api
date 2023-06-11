@@ -1,11 +1,7 @@
-Logout.
+Logout using a given API token.
 ---
-
-Request headers:    
-    Authorization (JWT token from signup/login): string
-
-Input:
-    none
-
-Output:
-    JSON object
+responses:
+    200:
+        description: Successfully logged out.
+    401:
+        description: Invalid token or other general Exception.

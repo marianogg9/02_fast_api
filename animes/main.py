@@ -148,13 +148,14 @@ def list(name):
     else:
         output = 'error: Anime with Name = ' + str(name) + ' not found.'
         listing.append(output)
+        return make_response(listing), 201
     
     return make_response(listing), 200
 
 @main.route('/anime/add/<int:anime_id>', methods=['POST'])
 @swag_from('apidocs/add_anime.yaml')
 @login_required
-def add():
+def add(anime_id):
     '''
     Add a new anime
 
@@ -181,7 +182,6 @@ def add():
             confirmation message::string
     '''
     listing = []
-    anime_id = request.args.get('anime_id')
     
     if anime_id is None:
         listing.append('Please enter an Anime ID')
@@ -198,8 +198,9 @@ def add():
 
     if result:
         print('already exists')
-        message = 'Anime with Anime_ID: ' + anime_id + ' already exists.'
+        message = 'Anime with Anime_ID: ' + str(anime_id) + ' already exists.'
         listing.append(message)
+        return make_response(listing), 201
     else:
         new_anime = Anime(Anime_ID=anime_id,Name=name,Genre=genre,Type=type,Episodes=episodes,Rating=rating,Members=members)
         db.session.add(new_anime)
@@ -221,7 +222,7 @@ def add():
 @main.route('/anime/update/<int:anime_id>', methods=['PATCH'])
 @swag_from('apidocs/update_anime.yaml')
 @login_required
-def update():
+def update(anime_id):
     '''
     Update an existing anime
 
@@ -254,7 +255,7 @@ def update():
             members::int
     '''
     listing = []
-    anime_id = request.args.get('anime_id')
+    # anime_id = request.args.get('anime_id')
     
     if anime_id is None:
         listing.append('Please enter an Anime ID')
@@ -291,15 +292,16 @@ def update():
         }
         listing.append(output)
     else:
-        message = 'Anime with Anime ID: ' + anime_id + ' does not exist. Please include an existing Anime ID.'
+        message = 'Anime with Anime ID: ' + str(anime_id) + ' does not exist. Please include an existing Anime ID.'
         listing.append(message)
+        return make_response(listing), 201
 
     return make_response(listing), 200
 
 @main.route('/anime/delete/<int:anime_id>', methods=['DELETE'])
 @swag_from('apidocs/delete_anime.yaml')
 @login_required
-def delete():
+def delete(anime_id):
     '''
     Delete an exsiting anime
 
@@ -320,8 +322,6 @@ def delete():
             confirmation message::string
     '''
     listing = []
-
-    anime_id = request.args.get('anime_id')
     
     if anime_id is None:
         listing.append('Please enter an Anime ID')
@@ -332,10 +332,11 @@ def delete():
     if result:
         db.session.delete(result)
         db.session.commit()
-        message = 'Anime with Anime ID: ' + anime_id + ' has been deleted from the DB.'
+        message = 'Anime with Anime ID: ' + str(anime_id) + ' has been deleted from the DB.'
         listing.append(message)
     else:
-        message = 'Anime with Anime ID: ' + anime_id + ' does not exist. Please include an existing Anime ID.'
+        message = 'Anime with Anime ID: ' + str(anime_id) + ' does not exist. Please include an existing Anime ID.'
         listing.append(message)
+        return make_response(listing), 201
 
     return make_response(listing), 200

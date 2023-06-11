@@ -1,45 +1,54 @@
 Update an existing anime.
 ---
+parameters:
+- name: anime_id
+  in: path
+  type: int
+  required: true
+  default: none
+- name: querystring
+  in: querystring
+  enum: ['name::string','genre::string','type::string','episodes::int','rating::string','members::int']
+  default: none
 
-    Request headers:
-        
-        Authorization (JWT token from signup/login): string
+definitions:
+  Animes:
+    type: array
+    items:
+      $ref: '#/definitions/Anime'
+  Anime:
+    type: object
+    properties:
+      Anime_ID:
+        type: string
+      Genre:
+        type: string
+      Type:
+        type: string
+      Episodes:
+        type: integer
+      Members:
+        type: integer
+      Rating:
+        type: string
+  Error:
+    type: object
+    properties:
+      status: 
+        type: string
+      message: 
+        type: string
 
-    Parameters:
-    - name: querystring
-
-        # - name: Querystring
-        #   enum:
-        #     - anime_id:
-        #         type: int
-        #         required: true
-        #     - name:
-        #         type: string
-        #         required: false
-        #     - genre:
-        #         type: string
-        #         required: false
-        #     - type:
-        #         type: string
-        #         required: false
-        #     - episodes:
-        #         type: string
-        #         required: false
-        #     - rating:
-        #         type: string
-        #         required: false
-        #     - members:
-        #         type: string
-        #         required: false
-    
-    Output:
-
-        JSON object:
-
-            anime_id: int
-            name: string
-            genre: string
-            type: string
-            episodes: int
-            rating: string
-            members: int
+responses:
+    200:
+        description: Success.
+        schema:
+            $ref: '#/definitions/Animes'
+    201:
+        description: Non existant Anime ID.
+        schema:
+            $ref: '#/definitions/Error'
+    401:
+        description: Invalid token or other general Exception.
+        schema:
+            $ref: '#/definitions/Error'

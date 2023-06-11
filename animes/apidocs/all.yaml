@@ -1,11 +1,8 @@
-List first 100 animes per anime id
+List first 100 animes ordered per Anime ID.
 ---
 
-Request headers:    
-    Authorization (JWT token from signup/login)::string
-
-Input:
-    none
-
-Output:
-    JSON list
+responses:
+    200:
+        description: Successfully logged out.
+    401:
+        description: Invalid token or other general Exception.
