@@ -50,6 +50,10 @@ This is an API to list an Anime from local DB.
 - Implement logout (JWT token blacklisting).
 
 ## Changelog
+- [1.2](https://github.com/marianogg9/flasking/commit/7c0bbca6c2eaf6e4944c0a5e964dc5bc27cebe02)
+    - added Swagger support.
+    - refactored `login_required` decorator.
+    - added `/logout` method.
 
 - [1.1](https://github.com/marianogg9/flasking/commit/a73a18edddeaa90fc9bbe7cfae4b283da60b7894)
     
