@@ -6,6 +6,7 @@ This is an API to list an Anime from local DB.
 - Flask.
 - SQLAlchemy.
 - JWT support.
+- Flassgger for Swagger docs.
 
 ## How to run
 - Use a virtualenv
@@ -34,10 +35,7 @@ This is an API to list an Anime from local DB.
     ```
 
 - See API documentation
-    ```bash
-    pdoc animes
-    ```
-    It will open a browser in `localhost:8080` with the API documentation.
+    Access `localhost:5000/apidocs`.
 
 ## Resources
 - [Real Python Flask JWT auth tutorial](https://realpython.com/token-based-authentication-with-flask/).
@@ -45,6 +43,7 @@ This is an API to list an Anime from local DB.
 - [Werkzeug Docs](https://werkzeug.palletsprojects.com/en/2.3.x/utils/).
 - [Flask make_response method](https://tedboy.github.io/flask/generated/flask.make_response.html).
 - [Flask SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/models/#defining-models).
+- [Flassgger] docs (https://github.com/flasgger/flasgger).
 
 ## ToDo
 - Add tests.
