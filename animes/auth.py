@@ -143,7 +143,7 @@ def login_post():
             'status': 'fail',
             'message': 'Try again.'
         }
-        return make_response(response_object), 500
+        return make_response(response_object), 201
 
 @auth.route('/logout')
 @login_required
