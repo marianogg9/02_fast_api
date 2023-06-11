@@ -1,16 +1,44 @@
-Signup.
+Signup and get an API token for later use.
 ---
-Input:
 
-    JSON object:
-        
-        email: string
-        password: string
+definitions:
+  Animes:
+    type: array
+    items:
+      $ref: '#/definitions/Anime'
+  Anime:
+    type: object
+    properties:
+      Anime_ID:
+        type: string
+      Genre:
+        type: string
+      Type:
+        type: string
+      Episodes:
+        type: integer
+      Members:
+        type: integer
+      Rating:
+        type: string
+  Error:
+    type: object
+    properties:
+      status: 
+        type: string
+      message: 
+        type: string
 
-Output:
-
-    JSON object:
-
-        auth_token: string
-        message: string
-        status: string
+responses:
+    200:
+        description: Successfully registered.
+        schema:
+          $ref: '#/definitions/Error'
+    201:
+        description: General exception.
+        schema:
+          $ref: '#/definitions/Error'
+    202:
+        description: User already exists.
+        schema:
+          $ref: '#/definitions/Error'

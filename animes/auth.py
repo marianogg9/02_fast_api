@@ -78,15 +78,13 @@ def signup_post():
                 'message': 'Successfully registered.',
                 'auth_token': auth_token.decode("utf-8")
             }
-            #print(response_object)
-            return make_response(response_object), 201
+            return make_response(response_object), 200
         except Exception:
-            #logging.exception('some error')
             response_object = {
                 'status': 'fail',
                 'message': 'Some error occurred. Please try again.'
             }
-            return make_response(response_object), 401
+            return make_response(response_object), 201
     else:
         response_object = {
             'status': 'fail',
