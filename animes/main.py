@@ -151,7 +151,7 @@ def list(name):
     
     return make_response(listing), 200
 
-@main.route('/anime/add', methods=['POST'])
+@main.route('/anime/add/<int:anime_id>', methods=['POST'])
 @swag_from('apidocs/add_anime.yaml')
 @login_required
 def add():
@@ -218,7 +218,7 @@ def add():
     
     return make_response(listing), 200
 
-@main.route('/anime/update', methods=['PATCH'])
+@main.route('/anime/update/<int:anime_id>', methods=['PATCH'])
 @swag_from('apidocs/update_anime.yaml')
 @login_required
 def update():
@@ -296,7 +296,7 @@ def update():
 
     return make_response(listing), 200
 
-@main.route('/anime/delete', methods=['DELETE'])
+@main.route('/anime/delete/<int:anime_id>', methods=['DELETE'])
 @swag_from('apidocs/delete_anime.yaml')
 @login_required
 def delete():
