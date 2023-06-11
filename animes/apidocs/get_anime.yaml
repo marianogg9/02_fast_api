@@ -16,6 +16,7 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/Anime'
+
   Anime:
     type: object
     properties:
@@ -31,6 +32,7 @@ definitions:
         type: integer
       Rating:
         type: string
+
   Error:
     type: object
     properties:
@@ -46,5 +48,9 @@ responses:
           $ref: '#/definitions/Animes'
     401:
         description: Invalid token or other general Exception.
+        schema:
+          $ref: '#/definitions/Error'
+    404:
+        description: Anime not found.
         schema:
           $ref: '#/definitions/Error'

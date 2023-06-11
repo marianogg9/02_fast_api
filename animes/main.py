@@ -148,7 +148,7 @@ def list(name):
     else:
         output = 'error: Anime with Name = ' + str(name) + ' not found.'
         listing.append(output)
-        return make_response(listing), 201
+        return make_response(listing), 404
     
     return make_response(listing), 200
 
