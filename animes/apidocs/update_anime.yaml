@@ -45,7 +45,7 @@ responses:
         schema:
             $ref: '#/definitions/Animes'
     201:
-        description: Non existant Anime ID.
+        description: Non existent Anime ID.
         schema:
             $ref: '#/definitions/Error'
     401:
