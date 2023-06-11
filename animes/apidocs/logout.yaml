@@ -1,7 +1,60 @@
-Logout using a given API token.
+Logout using a valid API token.
 ---
+
+definitions:
+    Animes:
+        type: array
+        items:
+        $ref: '#/definitions/Anime'
+        
+    Anime:
+        type: object
+        properties:
+        Anime_ID:
+            type: string
+        Genre:
+            type: string
+        Type:
+            type: string
+        Episodes:
+            type: integer
+        Members:
+            type: integer
+        Rating:
+            type: string
+  
+    Error:
+        type: object
+        properties:
+        status: 
+            type: string
+        message: 
+            type: string
+    
+    AuthObject:
+        type: object
+        properties:
+        status:
+            type: string
+        message: 
+            type: string
+        auth_token:
+            type: string
+
 responses:
     200:
         description: Successfully logged out.
+        schema:
+          $ref: '#/definitions/Error'
+    201:
+        description: General exception.
+        schema:
+          $ref: '#/definitions/Error'
     401:
-        description: Invalid token or other general Exception.
+        description: No token provided.
+        schema:
+          $ref: '#/definitions/Error'
+    402:
+        description: Invalid token.
+        schema:
+          $ref: '#/definitions/Error'
