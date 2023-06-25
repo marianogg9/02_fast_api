@@ -1,3 +1,9 @@
+# TODO: For imports usually we sort in the alphabetical order depending on their source
+#   First we import python built-in modules
+#   Then, we import third parties modules
+#   Finally, we import local modules/projects
+#   You can use isort to sort automatically imports for you
+
 from flask import Blueprint, request, render_template, make_response
 from . import db
 from .models import Anime, User
@@ -13,13 +19,22 @@ secret = os.environ['FLASK_SECRET_KEY']
 @login_required
 def profile():
     auth_header = request.headers.get('Authorization')
+
+    # TODO: If there is no auth header, should be abort the request directly
+    #   Instead of passing a empty string for the header?
     if auth_header:
+        # TODO: In production code, we use logging library instead of print
         print(auth_header.split(" ")[0])
         auth_token = auth_header.split(" ")[0]
     else:
         auth_token = ''
+        # TODO: Usually it is good to raise an exception as soon as possible
+        #   If no auth header i would return 401 directly
+
     if auth_token:
         resp = User.decode_auth_token(auth_token,secret)
+        # TODO: Usually it is good to raise an exception as soon as possible
+        #   If invalid token i would return 401 directly
         if not isinstance(resp,str):
             user = User.query.filter_by(id=resp).first()
             response_object = {
@@ -53,6 +68,7 @@ def index():
 @main.route('/all')
 @swag_from('apidocs/all.yaml')
 @login_required
+# TODO: all => movies
 def all():
     '''
     List first 100 animes per anime id
@@ -162,11 +178,14 @@ def add(anime_id):
             confirmation message::string
     '''
     listing = []
-    
+
+    # TODO: I don't think the client have to enter a animeid to create an anime
+    #   The backend is responsible to generate a new anime id
     if anime_id is None:
         listing.append('Please enter an Anime ID')
         return listing
-    
+
+    # TODO: Here you can use Pydantic to validate the data
     name = request.args.get('name')
     genre = request.args.get('genre')
     type = request.args.get('type')
@@ -174,6 +193,7 @@ def add(anime_id):
     rating = request.args.get('rating')
     members = request.args.get('members')
 
+    # TODO: I would put this call to SQLAlchemy in a utils function called get_movie_by_id
     result = Anime.query.filter_by(Anime_ID=anime_id).first()
 
     if result:
@@ -182,9 +202,15 @@ def add(anime_id):
         listing.append(message)
         return make_response(listing), 201
     else:
+        # TODO: This logic can be put in another file called utils
+        #   it will keep things clear in the view and will isolate your code in a new file called utils
+        #   this file will contain a function called create_anime
+        #   as a result it will become simpler to test the creation of anime as well
         new_anime = Anime(Anime_ID=anime_id,Name=name,Genre=genre,Type=type,Episodes=episodes,Rating=rating,Members=members)
         db.session.add(new_anime)
         db.session.commit()
+
+        # TODO: Instead of querying back the anime could you just use new_anime?
         new_result = Anime.query.filter_by(Anime_ID=anime_id).first()
         output = {
                 "Anime_ID" : new_result.Anime_ID,
@@ -236,11 +262,13 @@ def update(anime_id):
     '''
     listing = []
     # anime_id = request.args.get('anime_id')
-    
+
+    # TODO: If parameter is missing you can return a 400 Bad syntax error with this message
     if anime_id is None:
         listing.append('Please enter an Anime ID')
         return listing
-    
+
+    # TODO: Here you can use Pydantic to validate the data
     name = request.args.get('name')
     genre = request.args.get('genre')
     type = request.args.get('type')
@@ -261,6 +289,7 @@ def update(anime_id):
         db.session.commit()
 
         new_result = Anime.query.filter_by(Anime_ID=anime_id).first()
+        # TODO: Pydantic should allow you to serialize data to prepare the response
         output = {
                 "Anime_ID" : new_result.Anime_ID,
                 "Name" : new_result.Name,
@@ -302,7 +331,8 @@ def delete(anime_id):
             confirmation message::string
     '''
     listing = []
-    
+
+    # TODO: If parameter is missing you can return a 400 Bad syntax error with this message
     if anime_id is None:
         listing.append('Please enter an Anime ID')
         return listing

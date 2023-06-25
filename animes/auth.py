@@ -10,6 +10,7 @@ from functools import wraps
 auth = Blueprint('auth', __name__)
 secret = os.environ['FLASK_SECRET_KEY']
 
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args,**kwargs):
@@ -37,6 +38,7 @@ def login_required(f):
     return decorated_function
 
 
+# TODO: Is it still needed?
 @auth.route('/signup')
 def signup():
     '''
@@ -92,6 +94,8 @@ def signup_post():
         }
         return make_response(response_object), 202
 
+
+# TODO: Is it still needed?
 @auth.route('/login')
 def login():
     '''
@@ -99,6 +103,7 @@ def login():
     '''
     return "Login: curl -XPOST -d '\"email\":\"your_email\",\"password\":\"your_password\"}' -H 'Content-Type: application/json' server_address:port/login"
 
+# TODO: An other way would be to have a uri "/tokens/" when you make a POST Request you are logging in.
 @auth.route('/login', methods=['POST'])
 @swag_from('apidocs/login.yaml')
 def login_post():
@@ -122,6 +127,7 @@ def login_post():
     '''
     post_data = request.get_json()
     try:
+        # TODO: This logic could be in the utils file in a function called get_user_by_email
         user = User.query.filter_by(email=post_data.get('email')).first()
         if user and check_password_hash(user.password,post_data.get('password')):
             auth_token = user.encode_auth_token(user.id,secret)
@@ -145,12 +151,14 @@ def login_post():
         }
         return make_response(response_object), 201
 
+# TODO: Still needed?
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
 
+# TODO: Still needed?
 @auth.route('/logout', methods = ['POST'])
 @swag_from('apidocs/logout.yaml')
 @login_required
