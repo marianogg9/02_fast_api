@@ -22,17 +22,9 @@ def login_required(f):
         if auth_token:
             resp = User.decode_auth_token(auth_token,secret)
             if isinstance(resp,str):
-                response_object = {
-                    'status': 'fail',
-                    'message': resp
-                }
-                return make_response(response_object), 402
+                return {'status':'fail', 'message':resp}, 402
         else:
-            response_object = {
-                'status': 'fail',
-                'message': 'Provide a valid token'
-            }
-            return make_response(response_object), 401
+            return {'status':'fail','message':'Provide a valid token'}, 401
         return f(*args, **kwargs)
     return decorated_function
 
@@ -52,24 +44,11 @@ def signup_post():
             db.session.add(new_user)
             db.session.commit()
             auth_token = new_user.encode_auth_token(new_user.id, secret)
-            response_object = {
-                'status': 'success',
-                'message': 'Successfully registered.',
-                'auth_token': auth_token.decode("utf-8")
-            }
-            return make_response(response_object), 200
+            return {'status':'success','message':'Successfully registered','auth_token':auth_token.decode("utf-8")}, 200
         except Exception:
-            response_object = {
-                'status': 'fail',
-                'message': 'Some error occurred. Please try again.'
-            }
-            return make_response(response_object), 201
+            return {'status':'fail','message':'Some error ocurred, please try again'}, 201
     else:
-        response_object = {
-            'status': 'fail',
-            'message': 'User already exists. Please Log in'
-        }
-        return make_response(response_object), 202
+        return {'status':'fail','message':'User already exists, please log in instead'}, 202
 
 @auth.route('/login')
 def login():
@@ -84,24 +63,11 @@ def login_post():
         if user and check_password_hash(user.password,post_data.get('password')):
             auth_token = user.encode_auth_token(user.id,secret)
             if auth_token:
-                response_object = {
-                    'status': 'success',
-                    'message': 'Successfully logged in.',
-                    'auth_token': auth_token.decode("utf-8")
-                }
-                return make_response(response_object), 200
+                return {'status':'success','message':'Successfully logged in.','auth_token':auth_token.decode("utf-8")}, 200
         else:
-            response_object = {
-                'status': 'fail',
-                'message': 'User does not exist.'
-            }
-            return make_response(response_object), 404
+            return {'status':'fail','message':'User does not exist, try with a different user'}, 404
     except Exception as e:
-        response_object = {
-            'status': 'fail',
-            'message': 'Try again.'
-        }
-        return make_response(response_object), 201
+        return {'status':'fail','message':e}, 201
 
 @auth.route('/logout')
 @login_required
@@ -127,26 +93,10 @@ def logout_post():
             try:
                 db.session.add(blacklist_token)
                 db.session.commit()
-                response_object = {
-                    'status': 'success',
-                    'message': 'Successfully logged out.'
-                }
-                return make_response(response_object), 200
+                return {'status':'success','message':'Successfully logged out'}, 200
             except Exception as e:
-                response_object = {
-                    'status': 'fail',
-                    'message': e
-                }
-                return make_response(response_object), 201
+                return {'status':'fail','message':e}, 201
         else:
-            response_object = {
-                'status': 'fail',
-                'message': resp
-            }
-            return make_response(response_object), 401
+            return {'status':'fail','message':resp}, 401
     else:
-        response_object = {
-            'status': 'fail',
-            'message': 'Provide a valid token'
-        }
-        return make_response(response_object), 401
+        return {'status':'fail','message':'Please provide a valid token'}, 401
