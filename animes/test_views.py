@@ -35,7 +35,7 @@ def test_login_before_signup(client):
     # no signup first
     response = client.post("/login",json={"email":"alguna@sarasa.com"})
     assert response.status_code == 404
-    assert response.json["message"] == "User does not exist."
+    assert response.json["message"] == "User does not exist, try with a different user"
 
 def test_login_wrong_body(client):
     signup(client)
@@ -75,4 +75,4 @@ def test_logout(client):
     login(client)
     response = client.post("/logout",headers={"Authorization": login(client).json["auth_token"]})
     assert response.status_code == 200
-    assert response.json["message"] == "Successfully logged out."
+    assert response.json["message"] == "Successfully logged out"

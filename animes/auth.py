@@ -65,9 +65,10 @@ def login_post():
             if auth_token:
                 return {'status':'success','message':'Successfully logged in.','auth_token':auth_token.decode("utf-8")}, 200
         else:
-            abort(404,description='User does not exist, try with a different user')
+            return {'status':'fail','message':'User does not exist, try with a different user'}, 404
+            # abort(404,description='User does not exist, try with a different user') -> response: 500, TypeError: Object of type NotFound is not JSON serializable
     except Exception as e:
-        return {'status':'fail','message':e}, 201
+        return {'status':'fail','message':str(e)}, 201
 
 @auth.route('/logout')
 @login_required
