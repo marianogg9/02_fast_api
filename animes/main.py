@@ -22,25 +22,10 @@ def profile():
         resp = User.decode_auth_token(auth_token,secret)
         if not isinstance(resp,str):
             user = User.query.filter_by(id=resp).first()
-            response_object = {
-                'status': 'success',
-                'data': {
-                    'user_id': user.id,
-                    'email': user.email
-                }
-            }
-            return make_response(response_object), 200
-        response_object = {
-            'status': 'fail',
-            'message': resp
-        }
-        return make_response(response_object), 401
+            return {'status':'success','data':{'user_id':user.id,'email':user.email}}, 200
+        return {'status':'fail','message':resp}, 401
     else:
-        response_object = {
-            'status': 'fail',
-            'message': 'Provide a valid token'
-        }
-        return make_response(response_object), 401
+        return {'status':'fail','message':'Invalid token, please provide a valid one'}, 401
 
 @main.route('/')
 @swag_from('apidocs/base.yaml')
@@ -63,7 +48,7 @@ def all():
             "Members": i.Members
         }
         listing.append(result)
-    return make_response(listing), 200
+    return listing, 200
 
 
 @main.route('/anime/<string:name>')
@@ -88,9 +73,9 @@ def list(name):
     else:
         output = 'error: Anime with Name = ' + str(name) + ' not found.'
         listing.append(output)
-        return make_response(listing), 404
+        return listing, 404
     
-    return make_response(listing), 200
+    return listing, 200
 
 @main.route('/anime/add/<int:anime_id>', methods=['POST'])
 @swag_from('apidocs/add_anime.yaml')
@@ -100,7 +85,7 @@ def add(anime_id):
     
     if anime_id is None:
         listing.append('Please enter an Anime ID')
-        return listing
+        return listing, 201
     
     name = request.args.get('name')
     genre = request.args.get('genre')
@@ -115,7 +100,7 @@ def add(anime_id):
         print('already exists')
         message = 'Anime with Anime_ID: ' + str(anime_id) + ' already exists.'
         listing.append(message)
-        return make_response(listing), 201
+        return listing, 201
     else:
         new_anime = Anime(Anime_ID=anime_id,Name=name,Genre=genre,Type=type,Episodes=episodes,Rating=rating,Members=members)
         db.session.add(new_anime)
@@ -132,7 +117,7 @@ def add(anime_id):
         }
         listing.append(output)
     
-    return make_response(listing), 200
+    return listing, 200
 
 @main.route('/anime/update/<int:anime_id>', methods=['PATCH'])
 @swag_from('apidocs/update_anime.yaml')
@@ -142,7 +127,7 @@ def update(anime_id):
     
     if anime_id is None:
         listing.append('Please enter an Anime ID')
-        return listing
+        return listing, 201
     
     name = request.args.get('name')
     genre = request.args.get('genre')
@@ -177,7 +162,7 @@ def update(anime_id):
     else:
         message = 'Anime with Anime ID: ' + str(anime_id) + ' does not exist. Please include an existing Anime ID.'
         listing.append(message)
-        return make_response(listing), 201
+        return listing, 201
 
     return make_response(listing), 200
 
@@ -189,7 +174,7 @@ def delete(anime_id):
     
     if anime_id is None:
         listing.append('Please enter an Anime ID')
-        return listing
+        return listing, 201
     
     result = Anime.query.filter_by(Anime_ID=anime_id).first()
 
@@ -201,6 +186,6 @@ def delete(anime_id):
     else:
         message = 'Anime with Anime ID: ' + str(anime_id) + ' does not exist. Please include an existing Anime ID.'
         listing.append(message)
-        return make_response(listing), 201
+        return listing, 201
 
-    return make_response(listing), 200
+    return listing, 200
