@@ -39,32 +39,11 @@ def login_required(f):
 
 @auth.route('/signup')
 def signup():
-    '''
-    Signup method description (text)
-    '''
     return "Signup: curl -XPOST -d '\"email\":\"your_email\",\"password\":\"your_password\"}' -H 'Content-Type: application/json' server_address:port/signup"
 
 @auth.route('/signup', methods = ['POST'])
 @swag_from('apidocs/signup.yaml')
 def signup_post():
-    '''
-    Signup
-
-    Input:
-
-        JSON object:
-            
-            email::string
-            password::string
-
-    Output:
-
-        JSON object:
-
-            auth_token::string
-            message::string
-            status::string
-    '''
     post_data = request.get_json()
     user = User.query.filter_by(email=post_data.get('email')).first()
     if not user:
@@ -94,32 +73,11 @@ def signup_post():
 
 @auth.route('/login')
 def login():
-    '''
-    Login method description (text)
-    '''
     return "Login: curl -XPOST -d '\"email\":\"your_email\",\"password\":\"your_password\"}' -H 'Content-Type: application/json' server_address:port/login"
 
 @auth.route('/login', methods=['POST'])
 @swag_from('apidocs/login.yaml')
 def login_post():
-    '''
-    Login
-
-    Input:
-
-        JSON object:
-            
-            email::string
-            password::string
-
-    Output:
-
-        JSON object:
-
-            auth_token::string
-            message::string
-            status::string
-    '''
     post_data = request.get_json()
     try:
         user = User.query.filter_by(email=post_data.get('email')).first()

@@ -45,30 +45,12 @@ def profile():
 @main.route('/')
 @swag_from('apidocs/base.yaml')
 def index():
-    '''
-    Show a minimal API documentation page
-    '''
     return render_template('base.html')
 
 @main.route('/all')
 @swag_from('apidocs/all.yaml')
 @login_required
 def all():
-    '''
-    List first 100 animes per anime id
-
-    Request headers:
-        
-        Authorization (JWT token from signup/login)::string
-    
-    Input:
-
-        none
-
-    Output:
-
-        JSON list
-    '''
     listing = []
     for i in Anime.query.order_by(Anime.Anime_ID).limit(100):
         result = {
@@ -88,28 +70,6 @@ def all():
 @swag_from('apidocs/get_anime.yaml')
 @login_required
 def list(name):
-    '''
-    Get information about a given anime by its name
-
-    Request headers:
-        
-        Authorization (JWT token from signup/login)::string
-
-    Input: 
-
-        name::string (required)
-
-    Output: 
-
-        JSON object:
-            anime_id::int
-            name::string
-            genre::string
-            type::string
-            episodes::int
-            rating::string
-            members::int
-    '''
     listing = []
     look_for = '%{0}%'.format(name)
     anime = Anime.query.filter(Anime.Name.contains(look_for))
@@ -136,31 +96,6 @@ def list(name):
 @swag_from('apidocs/add_anime.yaml')
 @login_required
 def add(anime_id):
-    '''
-    Add a new anime
-
-    Request headers:
-        
-        Authorization (JWT token from signup/login)::string
-
-    Input:
-
-        Querystring:
-
-            anime_id::int (required)
-            name::string (optional)
-            genre::string (optional)
-            type::string (optional)
-            episodes::int (optional)
-            rating::string (optional)
-            members::int (optional)
-    
-    Output:
-
-        JSON:
-
-            confirmation message::string
-    '''
     listing = []
     
     if anime_id is None:
@@ -203,39 +138,7 @@ def add(anime_id):
 @swag_from('apidocs/update_anime.yaml')
 @login_required
 def update(anime_id):
-    '''
-    Update an existing anime
-
-    Request headers:
-        
-        Authorization (JWT token from signup/login)::string
-
-    Input:
-
-        Querystring:
-
-            anime_id::int (required)
-            name::string (optional)
-            genre::string (optional)
-            type::string (optional)
-            episodes::int (optional)
-            rating::string (optional)
-            members::int (optional)
-    
-    Output:
-
-        JSON object:
-
-            anime_id::int
-            name::string
-            genre::string
-            type::string
-            episodes::int
-            rating::string
-            members::int
-    '''
     listing = []
-    # anime_id = request.args.get('anime_id')
     
     if anime_id is None:
         listing.append('Please enter an Anime ID')
@@ -282,25 +185,6 @@ def update(anime_id):
 @swag_from('apidocs/delete_anime.yaml')
 @login_required
 def delete(anime_id):
-    '''
-    Delete an exsiting anime
-
-    Request headers:
-        
-        Authorization (JWT token from signup/login)::string
-
-    Input:
-
-        Querystring:
-
-            anime_id::int (required)
-    
-    Output:
-
-        JSON:
-
-            confirmation message::string
-    '''
     listing = []
     
     if anime_id is None:
