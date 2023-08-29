@@ -65,7 +65,6 @@ def login_post():
             if auth_token:
                 return {'status':'success','message':'Successfully logged in.','auth_token':auth_token.decode("utf-8")}, 200
         else:
-            # return {'status':'fail','message':'User does not exist, try with a different user'}, 404
             abort(404,description='User does not exist, try with a different user')
     except Exception as e:
         return {'status':'fail','message':e}, 201
