@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, make_response
+from flask import Blueprint, request, render_template, make_response, abort
 from . import db
 from .models import Anime, User
 import os
@@ -72,8 +72,7 @@ def list(name):
             listing.append(output)
     else:
         output = 'error: Anime with Name = ' + str(name) + ' not found.'
-        listing.append(output)
-        return listing, 404
+        abort(404,description=output)
     
     return listing, 200
 
