@@ -8,6 +8,7 @@ from animes import create_app
 db = SQLAlchemy()
 dbname = "test-db-animes"
 
+
 @pytest.fixture()
 def app():
     app = create_app(dbname)

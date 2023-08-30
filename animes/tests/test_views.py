@@ -1,5 +1,6 @@
 from animes.conftest import signup, login
 
+
 def test_signup(test_client):
     response = signup(test_client)
     assert response.status_code == 200
