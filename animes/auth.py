@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, request, make_response, g, abort
+from flask import Blueprint, redirect, url_for, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, BlackListToken
 from . import db
