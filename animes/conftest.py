@@ -6,10 +6,11 @@ from flasgger import Swagger
 from animes import create_app
 
 db = SQLAlchemy()
+dbname = "test-db-animes"
 
 @pytest.fixture()
 def app():
-    app = create_app()
+    app = create_app(dbname)
     app.config.update({"TESTING": True})
 
     yield app

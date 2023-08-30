@@ -7,7 +7,7 @@ from flasgger import Swagger
 db = SQLAlchemy()
 
 
-def create_app():
+def create_app(dbname):
     """
     Flask app initialization and DB population (from input CSV)
     """
@@ -15,7 +15,7 @@ def create_app():
     swagger = Swagger(app)
 
     app.config["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]  # dummy key
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///animes.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + dbname + ".db"
 
     db.init_app(app)
 
