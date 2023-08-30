@@ -35,6 +35,7 @@ This is an API to list an Anime from local DB.
     ```
 
 - See API documentation
+
     Access `localhost:5000/apidocs`.
 
 - Run tests
