@@ -7,7 +7,7 @@ from flasgger import Swagger
 db = SQLAlchemy()
 
 
-def create_app(dbname):
+def create_app(dbname="animes"):
     """
     Flask app initialization and DB population (from input CSV)
     """
