@@ -37,6 +37,11 @@ This is an API to list an Anime from local DB.
 - See API documentation
     Access `localhost:5000/apidocs`.
 
+- Run tests
+    ```bash
+    python -m pytest -v
+    ```
+
 ## Resources
 - [Real Python Flask JWT auth tutorial](https://realpython.com/token-based-authentication-with-flask/).
 - [RESTful Auth with Flask](https://blog.miguelgrinberg.com/post/restful-authentication-with-flask).
