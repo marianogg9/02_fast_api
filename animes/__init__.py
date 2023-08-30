@@ -30,7 +30,7 @@ def create_app():
         db.create_all()
 
         with open(
-            "data/anime.csv", "r", encoding="utf-8"
+            "data/anime.csv", "r", encoding="utf-8" # change it to ../data/anime.csv when running tests
         ) as csvfile:  # read input data file
             csv_reader = csv.reader(csvfile, delimiter=",")
             first_line = csvfile.readline()
